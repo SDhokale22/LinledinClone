@@ -13,6 +13,7 @@ import { useRef, useState } from "react"
 import { readFileAsDataUrl } from "@/lib/utils"
 import Image from "next/image"
 import { createPostAction } from "@/lib/serveraction"
+import { toast } from "sonner"
 
 
 export function PostDialog({ setOpen, open, src }: { setOpen: any, open: boolean, src: string }) {
@@ -56,7 +57,15 @@ export function PostDialog({ setOpen, open, src }: { setOpen: any, open: boolean
             </div>
           </DialogTitle>
         </DialogHeader>
-        <form action={postActionHandler}>
+        <form action={(formData) => {
+          const promise =  postActionHandler(formData);
+          toast.promise(promise,{
+            loading:"Creating Post",
+            success:"Post Created",
+            error:"Failed to create post"
+          })
+          }}
+          >  
           <div className="flex flex-col">
             <Textarea
               id="name"
